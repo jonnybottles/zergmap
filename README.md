@@ -119,11 +119,5 @@ You can run the provided test scripts to validate the functionality of ZergMap. 
 
 Replace `test-case-1-easy_3n0r.sh` with the name of the test script you want to execute.
 
-## Contributing
 
-Contributions are welcome! Please fork the repository and create a pull request with your changes. Ensure your code adheres to the project's coding standards and includes relevant tests.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
