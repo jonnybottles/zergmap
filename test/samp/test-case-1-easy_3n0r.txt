@@ -1,0 +1,3 @@
+test/samp/easy_3n0r/packet00.pcap
+test/samp/easy_3n0r/packet01.pcap
+test/samp/easy_3n0r/packet02.pcap

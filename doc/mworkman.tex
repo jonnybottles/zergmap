@@ -1,0 +1,30 @@
+\documentclass{article}
+\author{Mark Workman}
+\title{Post Project Writeup using \LaTeX}
+\date{\today{}}
+\begin{document}
+\maketitle{}
+\section{Project Summery}
+\paragraph{}
+We were tasked with writing a program that, given the PCAPs of network traffic involving this fell race, 
+determine where the zerg are located on the battlefield.
+The program should recommend a list of zerg to kill in order to form a fully-connected 
+network of the survivors.
+\section{Challenges}
+\paragraph{}
+The biggest problem I faced was doing the reseach for which type of R-Tree we were going to use.
+The team took two days to research R-Tree's and decided to go with a quadTree after talking to the 
+instructor. Getting all the points to be searchable in the tree was difficult at first. The next 
+biggest challenge was getting the edges connected based on the lat and lon of the zerg being 
+inserted into the tree. Once we got that working it was yet another challenge to try and connect edges 
+based on altitude.
+\section{Successes}
+\paragraph{}
+The biggest success of this project was being able to work as a team. Our team consisted of members that worked
+very well together. It was very nice to have no finger pointing when problems in the code arose. The team sat down
+and talked through everything.
+\section{Lessons Learned}
+\paragraph{}
+The biggest lesson I learned was when we were finishing up the project. Having ample time to debug was key.
+Stepping through valgrind in order to find errors or memory leaks and combating them one by one helped imensely.
+\end{document}

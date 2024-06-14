@@ -1,0 +1,200 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{dirtree}
+\documentclass{article}
+\usepackage{graphicx}
+% page environment setup
+\geometry{
+    paper=letterpaper,
+    margin=1.5cm,
+    includefoot,
+    footskip=30pt
+}
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+}
+\hypersetup{
+    hidelinks,
+    pdftitle={Ticker Test Plan},
+    pdfauthor={Jonathan Butler},
+    pdfdisplaydoctitle
+}
+\setlength{\parindent}{0pt}
+% title setup
+\title{Ticker Test Plan}
+\author{Jonathan Butler, Adam Matthes, Mark Workman}
+\date{February 1\textsuperscript{st}, 2022}
+\begin{document}
+\maketitle
+\section{Introduction}
+
+ This program allows for the user to pass multiple \lstinline|.pcap| files via command line As such, there are a number of sample files for testing found in the project under the test folder.
+
+\section{Sample Files}
+\subsection{Non-Conforming Map Files}
+\hspace{8pt}
+\begin{enumerate}
+    \item \lstinline|test/samp/empty.pcap:
+        Empty file.
+    \item \lstinline|test/samp/gmailconvert.pcap|:
+        Non-Zerg file containing Gmail network traffic.
+\end{enumerate}
+
+\subsection{Instructor Provided Map Files}
+\begin{enumerate}
+    \item \lstinline|test/samp/C_getstatus.pcap|
+    \item \lstinline|test/samp/C_getstatus_S_normal.pcap|
+    \item \lstinline|test/samp/G_normal.pcap|
+    \item \lstinline|test/samp/S_normal.pcap|
+    \item \lstinline|test/samp/M_hello.pcap|
+    \item \lstinline|test/samp/M_ipv6.pcap|
+    \item \lstinline|test/samp/bad_multi_command.pcap|
+    \item \lstinline|test/samp/easy_3n0r/packet00.pcap|
+    \item \lstinline|test/samp/easy_3n0r/packet01.pcap|
+    \item \lstinline|test/samp/easy_3n0r/packet02.pcap|
+    \item \lstinline|test/samp/easy_3n1r/packet00.pcap|
+    \item \lstinline|test/samp/easy_3n1r/packet01.pcap|
+    \item \lstinline|test/samp/easy_3n1r/packet02.pcap|
+    \item \lstinline|test/samp/easy_5nxx/packet00.pcap|
+    \item \lstinline|test/samp/easy_5nxx/packet01.pcap|
+    \item \lstinline|test/samp/easy_5nxx/packet02.pcap|
+    \item \lstinline|test/samp/easy_5nxx/packet03.pcap|
+    \item \lstinline|test/samp/easy_5nxx/packet04.pcap|
+    \item \lstinline|test/samp/easy_v62n0r/packet00.pcap|
+    \item \lstinline|test/samp/easy_v62n0r/packet01.pcap|
+    \item \lstinline|test/samp/med_4n1r/packet00.pcap|
+    \item \lstinline|test/samp/med_4n1r/packet01.pcap|
+    \item \lstinline|test/samp/med_4n1r/packet02.pcap|
+    \item \lstinline|test/samp/med_4n1r/packet03.pcap|
+    \item \lstinline|test/samp/hard_6n0r/packet00.pcap|
+    \item \lstinline|test/samp/hard_6n0r/packet01.pcap|
+    \item \lstinline|test/samp/hard_6n0r/packet02.pcap|
+    \item \lstinline|test/samp/hard_6n0r/packet03.pcap|
+    \item \lstinline|test/samp/hard_6n0r/packet04.pcap|
+    \item \lstinline|test/samp/hard_6n0r/packet05.pcap|
+\end{enumerate}
+
+\subsection{Custom Built PCAP Files}
+\begin{enumerate}
+    \item \lstinline|test/samp/multimerge.pcap|:
+        Multiple instructor provided \lstinline|.pcap| files combined into one.
+    
+\end{enumerate}
+
+\section{Automated Test Cases}
+Automated test cases may be executed with make \lstinline|make check|. This will both build the tests and run them. These are the unit tests of functions.
+
+\subsection{Common Test Cases}
+
+Add a build target of make profile, which builds the program with profiling information.
+
+\hspace{8pt}
+\begin{enumerate}
+    \item Installation
+    \newline
+        \lstinline|git clone git@git.umbc.tc:tdqc/tdqc10/jbutler/zergmap.git; cd zergmap|
+        \newline
+            \textbf{Expected}: Directory is created.
+            \newline
+            \textbf{Perquisites}: In the project's directory.
+    \item Correct Branch
+    \newline
+        \lstinline|git branch|
+        \newline
+            \textbf{Expected}: \lstinline|master| is active.
+    \item Build Cleaning
+    \newline
+        \lstinline|make; make clean; ls *.o|
+        \newline
+            \textbf{Expected}: No such file or directory error.
+\end{enumerate}
+
+\subsection{Zergmap Test Cases}
+
+\hspace{8pt}
+\begin{enumerate}
+    \item Build
+    \newline
+        \lstinline|make zergmap; ls zergmap|
+        \newline
+            \textbf{Expected}: file is listed.
+    \item Build
+    \newline
+        \lstinline|make; ls zergmap|
+        \newline
+            \textbf{Expected}: file is listed
+    \item Build Debugging
+    \newline
+        \lstinline|make debug; readelf --debug-dump=decodedline zergmap|
+        \newline
+            \textbf{Expected}: Debugging info is listed.
+    \item No Command-Line Arguments
+    \newline
+        \lstinline|./zergmap|
+        \newline
+            \textbf{Expected}: Program exits with usage error.
+    \item Non-Existent File
+    \newline
+        \lstinline|./zergmap test/samp/doesnotexist.pcap|
+        \newline
+            \textbf{Expected}: Program exits with "no such file" error.
+        \item Multiple PCAPs One Good One Bad
+    \newline
+        \lstinline|./zergmap test/samp/bad_multi_command.pcap test/samp/G_normal.pcap|
+        \newline
+            \textbf{Expected}: Program processes both files and prints out number \lstinline|.pcap| files that were (1) and were not (1) able to be processed.
+    \item Empty \lstinline|.pcap| File
+    \newline
+        \lstinline|./zergmap/test/samp/empty.pcap|
+        \newline
+            \textbf{Expected}: Program exits with cannot ready all file heard bytes error.
+    \item Gmail File
+    \newline
+        \lstinline|./zergmap test/samp/gmailconvert.pcap|
+        \newline
+            \textbf{Expected}: Program exits with multiple "unable to decode" errors.
+    \item Hello Message File
+    \newline
+        \lstinline|./zergmap test/samp/M_hello.pcap|
+        \newline
+            \textbf{Expected}: Program displays "zergmap does not process message payloads" message.
+    \item Command Get Status File
+    \newline
+        \lstinline|./zergmap test/samp/C_getstatus.pcap; |
+        \newline
+            \textbf{Expected}: Program exits normally with GET STATUS command.
+    \item Command Get Status Status Normal File
+    \newline
+        \lstinline|./zergmap test/samp/C_getstatus_S_normal.pcap; |
+        \newline
+            \textbf{Expected}: Program exits normally with no message printed, as health is above 10%.
+    \item GPS Normal File
+    \newline
+        \lstinline|./zergmap /test/samp/G_normal.pcap|
+        \newline
+            \textbf{Expected}: Program exits with normally with GPS coordinates message. 
+    \item Status Normal File
+    \newline
+        \lstinline|./zergmap -h 75 /test/samp/S_normal.pcap|
+        \newline
+            \textbf{Expected}: Program exits normally and prints "low health" status message.
+    \newline
+        \lstinline|./zergmap /test/samp/bad_multi_command.pcap|
+        \newline
+            \textbf{Expected}: Program exits with normally with four "bad packet" messages. 
+    \item Message IPv6 File
+    \newline
+        \lstinline|./zergmap /test/samp/M_ipv6.pcap|
+        \newline
+            \textbf{Expected}: Program exits normally and displays "zergmap does not process message payloads" message.
+    \item Zergmap Instructor Provided Files
+    \newline
+        \lstinline|./zergmap /test/samp/<dirname>/<filename>.pcap|
+        \newline
+            \textbf{Expected}: Program processes \lstinline|.pcap file| and prints health status accordingly and recommends Zerg(s) for removal if any.
+\end{enumerate}
+
+\end{document}

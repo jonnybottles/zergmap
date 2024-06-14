@@ -1,0 +1,20 @@
+.TH zergmap 1 "10 FEB 2022" "1.0" "zergmap man page"
+.SH NAME
+ zergmap - The zergmap program examines PCAP files and creates a Zerg network.
+.SH SYNOPSIS
+  zergmap [-h] <FILENAME>
+.SH DESCRIPTION
+ zergmap - The zergmap program will work with the Psychic Captures (PCAPs) of network traffic involving the Zerg fell race. When given a PCAP file, Zergmap will determine where the Zerg are located on the battlfield. The program will recommend a list of Zerg to kill in order to form a fully-connected network of the survivors.
+.SH OPTIONS
+ zergmap [FILENAME]
+    Passes file to program which contains PCAP to be entered into program.
+ zergmap [-h var]
+    Prints out any zergIDs that are below var % health, rather than the default of 10%.
+ zergmap [-s]
+ Prints out Zergmap file and network processing statistics.
+.SH BUGS
+ No known bugs.
+.SH AUTHOR
+Jonathan Butler (xxbutler86xx@gmail.com)
+Adam Matthes (adammatthes@gmail.com)
+Mark Workman (calanhaga@aim.com)

@@ -1,0 +1,286 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{dirtree}
+\documentclass{article}
+\usepackage{graphicx}
+% page environment setup
+\geometry{
+    paper=letterpaper,
+    margin=1.5cm,
+    includefoot,
+    footskip=30pt
+}
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+}
+\hypersetup{
+    hidelinks,
+    pdftitle={Zergmap Design Plan},
+    pdfauthor={Jonathan Butler, Adam Matthes, Mark Workman},
+    pdfdisplaydoctitle
+}
+\setlength{\parindent}{0pt}
+% title setup
+\title{Zergmap Design Plan}
+\author{Jonathan Butler, Adam Matthes, Mark Workman}
+\date{January 31\textsuperscript{st}, 2022}
+\begin{document}
+\maketitle
+\section{Introduction}
+
+The Zerg, uplifted race of the Xel’Naga, communicate via latent psychic abilities. Surprisingly, these communications can be picked up via psychic antennae and recorded as standard UDP traffic destined for port 3751.
+\newline
+\newline
+This document describes a design plan to write a program (Zergmap) that will work with the Psychic Captures (PCAPs) of network traffic involving the Zerg fell race. When given a PCAP file, Zergmap will determine where the Zerg are located on the battlfield. The program will recommend a list of Zerg to kill in order to form a fully-connected network of the survivors.
+
+\section{Features Targeted}
+
+\subsection{Man Page}
+
+Write man(1) pages to document the program.
+
+\subsection{Big Endian}
+
+Support Big-endian \lstinline|.pcap| formats.
+
+\subsection{Additional Protocol Support}
+
+Add support for one of the following: \lstinline|IP Options|, \lstinline|Ethernet 802x| optional headers.
+
+\subsection{Other Additional Protocol Support }
+
+Add support for one of the following: \lstinline|4in6|, \lstinline|Teredo|, or \lstinline|6in4|.
+\pagebreak %-------------------------------------------------------------------
+
+\section{Architecture}
+\subsection{Data}
+
+\lstinline|Zergmap| will be required to accept multiple \lstinline|.pcap| files via the command line and parse each \lstinline|.pcap| file. It will support parsing both Big and Little-Endian .pcap file headers. Zergmap will read in Big Endian formatted network data and convert it to Little-Endian format for proccessing. 
+\newline
+\newline
+\lstinline|Zergmap| will incorporate the use of multiple data structures. The most notable of these data structures will be a directed graph and a \lstinline|Octree|. The \lstinline|Octree| will be used to store and retrieve multi-dimensional spatial data of a given Zerg (e.g. latitude, longitude, altitude), while the graph will be used to store and represent a fully connected Zerg network. A depiction of the file structure and structs used in \lstinline|Zergmap| are depicted Figures 1, 2, and 3.
+\newline
+\newline
+\graphicspath{ {./images/} }
+\includegraphics[width=\textwidth]{images/zergmap_file_layout.jpg}
+\caption{Figure 1: Zergmap Structs
+
+\pagebreak %-------------------------------------------------------------------
+
+\newline
+\graphicspath{ {./images/} }
+\includegraphics[width=\textwidth]{images/zergmap_h_file_structs.jpg}
+\caption{Figure 2: Zergmap.h Header File Structs
+
+\pagebreak %-------------------------------------------------------------------
+\newline
+\graphicspath{ {./images/} }
+\includegraphics[width=\textwidth]{images/zergmap_other_h_structs.jpg}
+\caption{Figure 3: Map, QuadTree, Graph, Priority Queue, Set Header File Structs
+\hspace{8pt}
+\begin{enumerate}
+\section{Significant Functions}
+\subsection{zergmap-driver.c}
+\item \lstinline|int main (argc, argv[])|
+
+\lstinline|Main| is the driving function for Zergmap. \lstinline|Main| will parse all command line arguments, as well as the \lstinline|.pcap| files that are provided by the user. \lstinline|main| will also conduct command line argument input validation, as well as file input validation.
+\end{enumerate}
+\hspace{8pt}
+\begin{enumerate}
+\subsection{zergmap.c}
+
+\item \lstinline|char **file_names(struct strings_array *sa, char *argv[])|
+\newline
+Dynamically allocates memory for an array of strings and stores all \lstinline|.,pcap| names passed at the command line within each element of the array.
+ 
+ \item \lstinline|int file_hdr_parse(file_t * file, pcap_file_hdr_t * pcap_fh)|
+\newline
+Populates appropriate \lstinline|.pcap| file header struct fields with values read in from \lstinline|.pcap| file.
+
+ \item \lstinline|int packet_hdr_parse(file_t * file, pcap_pkt_hdr_t * pcap_ph, eth_hdr_t * eth, ipv4_hdr_t * ipv4, udp_hdr_t * udp, z_hdr_t * zhdr, pcap_file_hdr_t * pcap_fh)|
+\newline
+Populates appropriate \lstinline|.pcap| packet, \lstinline|ethernet|, \lstinline|IPv4|, and \lstinline|UDP| struct fields with values read in from \lstinline|.pcap| files.
+
+\item \lstinline|void print_breed(z_hdr_t * zhdr, file_t * file)|
+\newline
+Converts Zerg breed type ID to Zerg breed string name. 
+
+\item \lstinline|int zerg_gps_parse(file_t * file, z_hdr_t * zhdr)|
+\newline
+Parses \lstinline|.pcap| file, converts values from Big to Little Endian, populates Zerg GPS struct fields, and prints values to \lstinline|stdout|.
+
+\item \lstinline|int zerg_status_parse(file_t * file, z_hdr_t * zhdr)|
+\newline
+Parses \lstinline|.pcap| file, converts values from Big to Little Endian, populates Zerg status struct fields, and prints values to \lstinline|.stdout|.
+
+\item \lstinline|int zerg_command_parse(file_t * file, z_hdr_t * zhdr)|
+\newline
+Parses \lstinline|.pcap| file, converts values from Big to Little Endian, populates Zerg Command struct fields, and prints values to \lstinline|stdout|.
+
+\item \lstinline|int zerg_msg_parse(file_t * file, z_hdr_t * zhdr)|
+\newline
+Parses \lstinline|.pcap| file, converts values from Big to Little Endian, populates Zerg Message struct field, and prints values to \lstinline|stdout|.
+\end{enumerate}
+\hspace{8pt}
+\begin{enumerate}
+\subsection{graph.c}
+
+\item \lstinline|graph *graph_create(int (*cmp)(const void *, const void *))|
+\newline
+Creates and returns a graph object.
+
+\item \lstinline|bool graph_add_vertex(graph *g, void *data)|
+\newline
+Creates vertexes and stores appropriate data within graph nodes.
+
+\item \lstinline|bool graph_add_edge(graph *g, const void *src, const void *dst, double weight)
+\newline
+Contains logic to iterate over all vertexes and add appropriate edges between vertexes to build out fully connected Zerg network.
+
+\item \lstinline|double graph_edge_weight|(const graph *g, const void *src, const void *dst)|
+\newline
+Adds weight to each edge within graph.
+
+\item \lstinline|bool graph_contains(const graph *g, const void *data)|
+\newline
+Searches for a given piece of data within the graph.
+
+\item \lstinline|bool graph_destroy(graph *g)|
+\newline
+Iterates over graph vertexes and edges and frees all dynamically allocated memory.
+\end{enumerate}
+\hspace{8pt}
+\begin{enumerate}
+\subsection{pathfinding.c}
+
+\item \lstinline|void graph_surrbale(graph *g)|
+\newline
+Utilizes Surrbale algorithm to find the two shortest paths between two Zergs.
+\end{enumerate}
+\hspace{8pt}
+\begin{enumerate}
+\subsection{quadTree.c}
+
+\item \lstinline|point *create_point(double lat, double lon)|
+\newline
+Creates and returns a point object.
+
+\item \lstinline|point *create_zerg_point(z_hdr_t *z_hdr)|
+\newline
+Creates and returns a point object for Zerg points.
+
+\item \lstinline|void point_print(point *p)|
+\newline
+Prints the point object to \lstinline|stdout|.
+
+\item \lstinline|box *create_box(point *center, double halfDimension)|
+\newline
+Creates and returns a new bounding box object.
+
+\item \lstinline|bool box_contains_point(box *boundary, point *point)|
+\newline
+Returns true or false depending on if the point is located in the bounding box.
+
+\item \lstinline|bool box_intersects(box *self, box *check)|
+\newline
+Returns true or false if one bounding box intersects the second bounding box.
+
+\item \lstinline|qt *create_quadTree(box *boundary)|
+\newline
+Creates and returns a new \lstinline|quadTree| object.
+
+\item \lstinline|size_t number_of_points(qt *qt)|
+\newline
+Returns a \lstinline|size_t| count of how many points are in the \lstinline|quadTree|.
+
+\item \lstinline|qt *subdivide(qt *root)|
+\newline
+This function is used with the \lstinline|quadTree| to divide into regions.
+
+\item \lstinline|bool qt_insert(qt *root, point *point)|
+\newline
+Returns true or false if a point is inserted into the \lstinline|quadTree|.
+
+\item \lstinline|point **quadTree_search(qt *root, box *range)|
+\newline
+Returns an array of point objects that are in the specified search box.
+
+\item \lstinline|void point_destroy(point *p)|
+\newline
+Frees a point object.
+
+\item \lstinline|void box_destroy(box *b)|
+\newline
+Frees a box object.
+
+\item \lstinline|void qt_destroy(qt *qt)|
+\newline
+Frees a \lstinline|quadTree| object.
+
+\newline
+\end{enumerate}
+
+\section {Command Line Arguments}
+	The program will be designed to accept multiple \lstinline|.pcap| files which are passed as command line arguments. If too many or too few arguments are passed, a usage message will be displayed. If a PCAP file of the incorrect type (e.g. anything but version 2.4) is passed, a usage message will be displayed.
+
+\section{Developmental Approach}
+Given that this is a group project, development will tasks will be executed simultaneously. All development tasks will be grouped within three Lines of Effort (LOEs), with each LOE being executed concurrently. Within each LOE, each task will be executed in priority order as listed below. The LOEs are as follows: LOE 1 (Graph), LOE 2 (Tree), and LOE 3 (Decode IPV6 / Suggested Features) . 
+\subsection{LOE 1: Graph}
+\hspace{8pt}
+\begin{enumerate}
+    \item \lstinline|graph_create|:
+        Develop \lstinline|graph_create|.
+    \item \lstinline|graph_add_vertex|:
+        Develop the \lstinline|graph_add_vertex|.
+    \item \lstinline|graph_add_edge|: 
+        Develop \lstinline|graph_add_edge|.
+    \item \lstinline|graph_add_weight|:
+        Develop \lstinline|graph_add_weight|.
+    \item \lstinline|graph_contains|:
+        Develop \lstinline|graph_contains|.
+    \item \lstinline|graph_destroy|: 
+        Develop \lstinline|graph_destroy|.
+    \item \lstinline|graph_surrbale|: 
+        Develop \lstinline|graph_surrbale|.
+\end{enumerate}
+\subsection{LOE 2: Tree}
+\hspace{8pt}
+\begin{enumerate}
+    \item \lstinline|point_create|:
+        Develop \lstinline|point_create| function.
+    \item \lstinline|point_print|:
+        Develop \lstinline|point_print| function.
+    \item \lstinline|create_box|:
+        Develop \lstinline|create_box| function.
+    \item \lstinline|box_contains|:
+        Develop \lstinline|box_contains| function.
+    \item \lstinline|box_intersects|:
+        Develop \lstinline|create_quadTree| function.
+    \item \lstinline|create_box|:
+        Develop \lstinline|create_box| function.
+    \item \lstinline|qt_insert|:
+        Develop \lstinline|qt_insert| function.
+    \item \lstinline|subdivide|:
+        Develop \lstinline|subdivide| function.
+    \item \lstinline|qt_destroy|:
+        Develop \lstinline|qt_destroy| function.
+\end{enumerate}
+\subsection{LOE 3: Decode / Suggested Features}
+\hspace{8pt}
+\begin{enumerate}
+    \item \lstinline|main|:
+        Update \lstinline|main| to take into account multiple \lstinline|.PCAP| files being passed via the command line.
+    \item \lstinline|file_names|:
+        Develop \lstinline|file_names|.
+    \item \lstinline|Decode IPv6|: 
+        Update \lstinline|Decode| to support \lstinline|IPv6|.
+    \item \lstinline|Suggested Features: Decode IP Options / Ethernet 802.x|: 
+        Update \lstinline|Decode| to support either IP Options or Ethernet 802.x headers|.
+    \item \lstinline|Suggested Features: Decode 4in6 / Teredo / 6in4|: 
+        Update \lstinline|Decode| to support either 4in6, Teredo, or 6in4|.
+\end{enumerate}
+
+\end{document}

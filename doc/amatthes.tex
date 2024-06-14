@@ -1,0 +1,39 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Zergmap Project Writeup}
+\author{Adam Matthes, on a team with Jon Butler and Mark Workman}
+
+\begin{document}
+\maketitle
+
+
+\section{Project Summary}
+The task was to create a data structure that processes Zerg PCAPS, organize their locational data, and evaluate whether or not the zerg formed a complete network that could be taken out with one action, or if removal of individual Zergs would be required to achieve the desired result. Our team implemented both a graph and quadtree for the data structures; the graph established connections between the Zerg, and the quadtree handled coordinate/position data.   
+
+\section{Challenges}
+
+This being the first group project of the course, we all had some learning to do in regards to git implementation. We had plenty of thoughtful planning during the design phase, but I do not think any of us were up to speed on handling merges optimally. A decent number of merges ended up with compilation issues as a result. We were able to work it out, but not without headache.
+
+Overall, I think we worked well together, but there did end up being some redundancy with functions I wrote for the graph compared to functions written for the quadtree and decode. In working out challenges with algorithm implementation with the graph and meeting requirement items, I wrote code that overlapped with the work Mark and Jon did. Sometimes this was because one person was out due to an appointment, and we didn't have a direct line to ask those questions. While I am glad I worked out that code from the perspective of general learning and practice, perhaps some time could have been saved if we had broadcast functions we created more often. 
+
+\section{Successes}
+Since my area of responsibility for the project was the graph and any related implementation, I am glad I got a two week period to focus on these topics, considering my blunder with the last assignment. I find that the capstones have been very important part of assembling a lot of concepts into something tangible that stays with me. I have enough empirical evidence to say that I generally do not perform well on the single day assignments. Either I understood and assimilated the concepts right away or I did not; either the questions I had lead to productive answers or they did not; when it is the latter, I am not good at finding a path forward on short notice, and I feel like I can only figure out how to best cut my losses. In contrast, when I have an extra day or so to think about a problem, I am able to work something out and learn more.
+
+\section{Lesson Learned}
+On future group projects, I and my future team will have to be more careful about any merge, making sure that every commit builds. We would have to work out a routine of checking each other's code, and consider reverting some merges if there are too many problems. It seemed like at certain points we played a whack-a-mole game to get to our intended program files; hopefully I will develop a stronger understanding of git over time.
+
+
+\end{document}
